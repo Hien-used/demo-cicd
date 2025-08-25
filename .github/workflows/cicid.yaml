@@ -26,7 +26,7 @@ jobs:
         run: dotnet build -c Release --no-restore
 
       - name: Publish
-        run: dotnet publish -c Release -o ./publish
+        run: dotnet publish -c Release -o .\publish
 
 
       - name: Stop IIS
@@ -35,7 +35,7 @@ jobs:
       - name: Deploy to IIS (copy files)
         run: |
         
-          xcopy /E /Y /I .\publish\* "D:\Hien\publish-demo"
+          xcopy /s /y .\publish\* "D:\Hien\publish-demo"
 
       - name: Start IIS
         run: iisreset /start
