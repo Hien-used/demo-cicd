@@ -3,11 +3,11 @@ name: Build and Deploy to IIS
 on:
   push:
     branches:
-      - master
+      - master   
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted   
 
     steps:
       - name: Checkout source code
@@ -25,16 +25,8 @@ jobs:
         run: dotnet build -c Release --no-restore
 
       - name: Publish
-        run: dotnet publish -c Release -o .\publish
-
-      - name: Stop IIS
-        run: iisreset /stop
+        run: dotnet publish -c Release -o ./publish
 
       - name: Deploy to IIS (copy files)
         run: |
-          echo Deploying to D:\Hien\publish-demo ...
-          if not exist "D:\Hien\publish-demo" mkdir "D:\Hien\publish-demo"
-          robocopy .\publish "D:\Hien\publish-demo" /MIR /R:3 /W:5
-
-      - name: Start IIS
-        run: iisreset /start
+          xcopy /E /Y /I .\publish\* "D:\Hien\publish-demo"
