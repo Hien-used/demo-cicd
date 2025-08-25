@@ -3,21 +3,20 @@ name: Build and Deploy to IIS
 on:
   push:
     branches:
-      - master   
+      - master   # Trigger khi push vào nhánh master
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted   
+    runs-on: self-hosted   # chạy trên VM (self-hosted runner)
 
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Setup .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
-
+          dotnet-version: '9.0.x'   # .NET 9 preview/RC, đổi nếu bạn dùng version khác
 
       - name: Restore
         run: dotnet restore
@@ -28,14 +27,14 @@ jobs:
       - name: Publish
         run: dotnet publish -c Release -o .\publish
 
-
       - name: Stop IIS
         run: iisreset /stop
 
       - name: Deploy to IIS (copy files)
         run: |
-        
-          xcopy /s /y .\publish\* "D:\Hien\publish-demo"
+          echo Deploying to D:\Hien\publish-demo ...
+          if not exist "D:\Hien\publish-demo" mkdir "D:\Hien\publish-demo"
+          robocopy .\publish "D:\Hien\publish-demo" /MIR /R:3 /W:5
 
       - name: Start IIS
         run: iisreset /start
