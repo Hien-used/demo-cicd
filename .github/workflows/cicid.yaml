@@ -3,11 +3,11 @@ name: Build and Deploy to IIS
 on:
   push:
     branches:
-      - master   # Trigger khi push vào nhánh master
+      - master
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted   
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source code
@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'   # .NET 9 preview/RC, đổi nếu bạn dùng version khác
+          dotnet-version: '9.0.x'
 
       - name: Restore
         run: dotnet restore
