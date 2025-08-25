@@ -1,4 +1,4 @@
-name: Build and Deploy to IIS (Self-hosted Runner)
+name: Build and Deploy to IIS
 
 on:
   push:
@@ -13,10 +13,11 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Setup .NET9
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
+
 
       - name: Restore
         run: dotnet restore
@@ -27,7 +28,6 @@ jobs:
       - name: Publish
         run: dotnet publish -c Release -o ./publish
 
-      
 
       - name: Stop IIS
         run: iisreset /stop
@@ -36,6 +36,6 @@ jobs:
         run: |
         
           xcopy /E /Y /I .\publish\* "D:\Hien\publish-demo"
-          
+
       - name: Start IIS
         run: iisreset /start
