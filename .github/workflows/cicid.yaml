@@ -27,6 +27,15 @@ jobs:
       - name: Publish
         run: dotnet publish -c Release -o ./publish
 
+      
+
+      - name: Stop IIS
+        run: iisreset /stop
+
       - name: Deploy to IIS (copy files)
         run: |
+        
           xcopy /E /Y /I .\publish\* "D:\Hien\publish-demo"
+          
+      - name: Start IIS
+        run: iisreset /start
