@@ -1,0 +1,32 @@
+name: Build and Deploy to IIS (Self-hosted Runner)
+
+on:
+  push:
+    branches:
+      - master   
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted   
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Publish
+        run: dotnet publish -c Release -o ./publish
+
+      - name: Deploy to IIS (copy files)
+        run: |
+          xcopy /E /Y /I .\publish\* "D:\Hien\publish-demo"
